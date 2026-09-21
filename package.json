@@ -1,6 +1,6 @@
 {
-  "name": "@simplebench/plugin-sdk",
-  "version": "1.0.0",
+  "name": "@lomi-dev/plugin-sdk",
+  "version": "1.1.0-alpha.0",
   "type": "module",
   "license": "Apache-2.0",
   "types": "index.d.ts",
@@ -9,20 +9,93 @@
       "types": "./index.d.ts",
       "default": "./index.js"
     },
-    "./build": "./build.mjs",
-    "./plugin.schema.json": "./plugin.schema.json"
+    "./build": {
+      "types": "./build.d.mts",
+      "default": "./build.mjs"
+    },
+    "./plugin.schema.json": "./plugin.schema.json",
+    "./manifest": {
+      "types": "./dist/manifest.d.ts",
+      "default": "./dist/manifest.js"
+    },
+    "./compatibility": "./compatibility.js",
+    "./package": {
+      "types": "./package-files.d.mts",
+      "default": "./package-files.mjs"
+    },
+    "./shortcuts": {
+      "types": "./dist/shortcuts.d.ts",
+      "default": "./dist/shortcuts.js"
+    },
+    "./contract-fixtures.json": "./fixtures/plugin-contract.json",
+    "./package.json": "./package.json"
   },
   "files": [
     "index.d.ts",
     "index.js",
     "build.mjs",
     "README.md",
-    "plugin.schema.json"
+    "plugin.schema.json",
+    "dist",
+    "compatibility.js",
+    "compatibility.d.ts",
+    "build.d.mts",
+    "LICENSE",
+    "package-files.mjs",
+    "package-files.d.mts",
+    "fixtures/plugin-contract.json"
   ],
   "peerDependencies": {
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "description": "Lomi plugin contract, shared runtime bridge and build helper",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lomi-dev/plugin-sdk.git"
+  },
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "npm run build",
+    "check": "pnpm build && tsc -p tests/tsconfig.json && node scripts/check-package.mjs",
+    "test": "pnpm build && node --test tests/*.test.mjs",
+    "test:archive": "node scripts/test-archive.mjs",
+    "pack:release": "node scripts/pack-release.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
     "tsup": "8.5.1",
-    "typescript": "~7.0.2"
+    "typescript": "7.0.2",
+    "es-module-lexer": "1.7.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "homepage": "https://github.com/lomi-dev/plugin-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/lomi-dev/plugin-sdk/issues"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "ajv": "8.17.1",
+    "prettier": "3.9.6"
   }
 }

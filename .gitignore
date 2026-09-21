@@ -1,0 +1,7 @@
+node_modules/
+dist/
+artifacts/
+.DS_Store
+*.tsbuildinfo
+tests/fixtures/*/package/
+tests/fixtures/*/node_modules/

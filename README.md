@@ -1,21 +1,47 @@
-# SimpleBench plugin SDK v1
+# Lomi plugin SDK
 
 Local plugins are trusted JavaScript in the main application's realm. This SDK
 is an integration contract, not a sandbox. Settings lists declarative metadata
 without executing modules. Installation accepts prebuilt packages only.
 
-Use `buildPlugin` from `@simplebench/plugin-sdk/build` with tsup 8.5.1,
+Use `buildPlugin` from `@lomi-dev/plugin-sdk/build` with tsup 8.5.1,
 TypeScript 7.0.2, React/React DOM 19.2.8 and their matching types. Keep `rootDir`
 explicit in tsconfig. The esbuild plugin replaces React, React DOM client and
 JSX entry points with small bindings to the host's shared instances. The SDK
 context has one identity in the host and all plugins. Other dependencies are
 bundled into your ESM output. Relative chunks and package assets stay local.
 
-`tsup` is no longer actively maintained. Its bundled declaration generator
-requires the removed JavaScript TypeScript compiler API and fails with TS 7.
-The build helper therefore uses tsup/esbuild for ESM and the installed TypeScript
-CLI for declarations. It does not downgrade the host's compiler or ignore the
-failure. Runtime installation invokes neither compiler nor package scripts.
+The helper uses tsup/esbuild for ESM. Type checking belongs to the author CLI;
+run `tsc --noEmit` before calling the legacy helper directly. Runtime packages do
+not include declaration files or source text. Source maps retain source paths
+without embedded source content. Installation runs no compiler or package scripts.
+
+The standalone package is `@lomi-dev/plugin-sdk@1.1.0-alpha.0`. See the
+[release procedure](docs/releases.md) for distribution status and prerequisites.
+The bundler supports both the current import and the legacy
+`@simplebench/plugin-sdk` import. Both retain
+`Symbol.for("simplebench.plugin-api.v1")` and the same host React context.
+
+Pure Node-safe exports:
+
+- `./manifest`: `parsePlugin`, `packagePath`, `jsonState` and the ID pattern.
+- `./shortcuts`: shortcut validation and canonical modifier/key names.
+- `./compatibility`: version baseline and native package limits.
+- `./contract-fixtures.json`: versioned shared parser cases for host integration.
+- `./package`: Node-only path, file and completed-package checks.
+- `./plugin.schema.json`: editor schema; semantic references still need the parser.
+- `./build`: the existing build helper with temporary output and last-good retention.
+
+This repository owns the contract. The application and author tools consume
+the installed package. The host imports the compiled `./manifest` and
+`./shortcuts` exports; it does not keep another copy of their source. These
+exports are browser-safe. Node build tools are only loaded through `./build`
+and `./package`. The main SDK export requires a running host.
+
+The application pins a tested SDK version and bundles its needed code during
+its own build. Running the installed application makes no SDK registry request.
+See [consumer integration](docs/consumers.md) for contract synchronization and
+cross-repository validation.
 
 Build your plugin and import its output `package` folder in Settings → Plugins.
 Import does not enable execution. Review the package and
@@ -40,13 +66,17 @@ a promise timeout: restart with `--disable-plugins` or `--safe-mode`.
 From the checkout, pack the SDK:
 
 ```sh
-mkdir -p /tmp/simplebench-sdk
-pnpm --dir packages/plugin-sdk pack --pack-destination /tmp/simplebench-sdk
+pnpm install --frozen-lockfile
+pnpm check
+pnpm test
+pnpm test:archive
+pnpm pack:release
 ```
 
 In your plugin's own folder, set the SDK dependency to
-`file:/tmp/simplebench-sdk/simplebench-plugin-sdk-1.0.0.tgz` and declare the
-compatible React, React DOM, tsup and TypeScript peers listed above. Provide
+`file:/absolute/path/to/plugin-sdk/artifacts/lomi-dev-plugin-sdk-1.1.0-alpha.0.tgz`
+and declare compatible React, React DOM and TypeScript versions. The archive
+contains its built exports and the build helper declares its own dependencies. Provide
 `plugin.json`, `src/index.tsx` exporting `activate`, and a `tsconfig.json` with
 `rootDir: "src"`, `jsx: "react-jsx"`, `module: "ESNext"` and
 `moduleResolution: "bundler"`. Define `build` as `node build.mjs`; that module
@@ -57,8 +87,8 @@ pnpm install --ignore-scripts
 pnpm build
 ```
 
-The helper produces `package/plugin.json`, native ESM and declarations in
-`package/dist`, and listed assets. It replaces the previous output package on
+The helper produces `package/plugin.json`, native ESM in `package/dist`,
+and listed assets. It replaces the previous output package on
 build. Copy/install this **package folder**, not the authoring directory. It must
 work offline; relative chunks remain relative to the immutable revision URL.
 Use the host-compatible React/DOM peer versions. The helper shares `react`,
