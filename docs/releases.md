@@ -28,8 +28,10 @@ qualification. Never reuse or replace a published version's bytes.
 ## First npm publication
 
 The package owner must authenticate with `npm login`, confirm scope access and
-configure 2FA. Download the exact tested archive from the successful SDK workflow,
-verify its hash against `release.json`, and publish it with:
+configure 2FA. For this existing GitHub prerelease, download its original archive and
+`release.json` from the release assets. Verify both hashes before publishing;
+do not replace these bytes with a later build of the same version. For a new
+version without a release, use the exact tested CI archive. Publish with:
 
 ```sh
 npm publish ./lomi-dev-plugin-sdk-1.1.0-alpha.0.tgz --access public --tag next
