@@ -8,7 +8,7 @@ an isolated dependency store. It exercises both current and legacy imports.
 Public exports and contract fixtures are versioned together. The application
 keeps a byte-for-byte copy of the fixtures for Rust-only builds; its SDK check
 rejects a stale copy. Coordinate changes to fixtures with a host update and the
-consumer compatibility workflow. Do not duplicate the validators in consumers.
+manual consumer compatibility checks. Do not duplicate the validators in consumers.
 
 Use English comments and commit messages in the form
 `type(scope): short imperative summary`, with subjects at most 72 characters.
@@ -17,4 +17,4 @@ results. Preserve configured Git identity and existing work. Do not add AI
 attribution. Commit and push only when explicitly requested.
 
 See [release procedure](docs/releases.md) for pinned consumers, prereleases,
-trusted publishing, compatibility checks and rollback.
+manual publication, compatibility checks and rollback.

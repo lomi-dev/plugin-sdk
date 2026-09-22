@@ -20,47 +20,41 @@ This alpha publication does not establish stable desktop qualification.
    `pnpm format:check`, and `pnpm test:archive`. Review `artifacts/release.json`
    and `artifacts/archive-validation.json`. The package contains compiled exports;
    installation does not compile it or access the application sources.
-3. Commit the version and run SDK CI on all three operating systems. Pin reviewed
-   host and tools commits through `LOMI_HOST_REF`/`LOMI_TOOLS_REF`; require the
-   consumer job to pass. This job tests the same archive that can be published.
+3. Commit the version before producing the release archive, then run the SDK
+   checks manually on Linux, macOS and Windows. Require the
+   [consumer compatibility checks](consumers.md#compatibility-checks) to pass
+   against reviewed full host and tools commits using the exact archive selected
+   for publication. Preserve each platform's validation reports.
 4. Record supported host versions and actual native qualification separately.
    The initial version remains alpha and uses the `next` distribution tag.
 
-## First npm publication
+## Manual npm publication
 
-The package owner must authenticate with `npm login`, confirm scope access and
-configure 2FA. For this existing GitHub prerelease, download its original archive and
-`release.json` from the release assets. Verify both hashes before publishing;
-do not replace these bytes with a later build of the same version. For a new
-version without a release, use the exact tested CI archive. Publish with:
+GitHub Actions is disabled in this repository. There is no Actions publishing
+workflow or OIDC publication path. The npm owner authenticates with `npm login`
+and confirms publication using interactive 2FA. Do not commit npm credentials.
+
+For each new version, retain the tested tarball from `artifacts/`, `release.json`
+and `archive-validation.json`. Verify the source commit, SHA-256 and SHA-512
+and the matching consumer validation report before publishing. Do not rebuild
+the selected archive between testing and publication. Replace `<new-version>`
+with the new, unpublished version:
 
 ```sh
-npm publish ./lomi-dev-plugin-sdk-1.1.0-alpha.0.tgz --access public --tag next
+npm publish "./artifacts/lomi-dev-plugin-sdk-<new-version>.tgz" --access public --tag next --ignore-scripts --auth-type=web
 ```
 
 Install that exact version in a fresh external author project and in the
-application. Commit registry resolution and integrity in consumer lockfiles.
-Only after the SDK is available, publish compatible CLI and generator versions
+application. Compare npm integrity with the tested archive and commit registry
+resolution and integrity in consumer lockfiles. Only after the SDK is available,
+publish compatible CLI and generator versions if their changes require releases,
 and test their registry installation. Never mark the registry path verified
 from local tarball or GitHub asset tests alone.
 
-## Subsequent publication
-
-Configure the npm trusted publisher for GitHub owner `lomi-dev`, repository
-`plugin-sdk`, workflow `publish.yml`, environment `npm`, with direct publishing
-permission. Then set `NPM_PUBLISH_READY=true` in this repository. The manual
-workflow accepts full host/tools commits, runs platform and consumer tests, and
-publishes their exact Linux archive with provenance; the publish job does not
-rebuild the package. It rejects a source commit, hash or version mismatch.
-
-Trusted publishing is not enabled yet. The first publication used the owner's
-interactive 2FA session. Keep the workflow gate disabled until npm account
-configuration is complete; do not commit authentication tokens.
-
-The workflow uses Node 24 and npm 11.5.1, satisfying the documented OIDC minimum.
-See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) for account
-configuration. Publish prereleases to `next`; stable promotion is a separate,
-explicit decision after native qualification and registry smoke tests.
+Create a GitHub prerelease at the exact source commit with the tested archive
+and validation reports. Preserve existing versions and release assets, including
+the original SDK 1.1.0-alpha.0 archive. Publish prereleases to `next`; stable
+promotion is a separate decision after native qualification and registry tests.
 
 ## Recovery
 
