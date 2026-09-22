@@ -4,11 +4,12 @@ The first standalone version is `@lomi-dev/plugin-sdk@1.1.0-alpha.0`. It preserv
 host API 1 and the existing `simplebench.plugin-api.v1` bridge. The source history
 was extracted from `lomi/packages/plugin-sdk`; new SDK changes belong here.
 
-Registry bootstrap is pending authenticated access to the npm scope. GitHub
-organization ownership does not establish npm organization ownership. Candidate
-archives may be distributed as GitHub prerelease assets with recorded SHA-256
-and SHA-512 integrity. Those assets are not an npm publication or stable desktop
-qualification. Never reuse or replace a published version's bytes.
+SDK 1.1.0-alpha.0 is published on npm. The verified npm organization owner is
+`maciejkolerski`, with 2FA enabled. Publication used the original tested GitHub
+prerelease archive from source `77d0c93461a99678b35469291219ab50b0140db8`.
+Registry SHA-512 integrity matches that archive, and the application installs
+the exact registry version. Never reuse or replace a published version's bytes.
+This alpha publication does not establish stable desktop qualification.
 
 ## Prepare a version
 
@@ -51,6 +52,10 @@ permission. Then set `NPM_PUBLISH_READY=true` in this repository. The manual
 workflow accepts full host/tools commits, runs platform and consumer tests, and
 publishes their exact Linux archive with provenance; the publish job does not
 rebuild the package. It rejects a source commit, hash or version mismatch.
+
+Trusted publishing is not enabled yet. The first publication used the owner's
+interactive 2FA session. Keep the workflow gate disabled until npm account
+configuration is complete; do not commit authentication tokens.
 
 The workflow uses Node 24 and npm 11.5.1, satisfying the documented OIDC minimum.
 See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) for account
