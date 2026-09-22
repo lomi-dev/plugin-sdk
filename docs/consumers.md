@@ -2,8 +2,9 @@
 
 `lomi-dev/plugin-sdk` is the only source of the public TypeScript contract,
 manifest/shortcut validators, schema and shared contract fixtures. The application
-implements the host runtime. `lomi-dev/plugin-tools` supplies author commands and
-scaffolds. Each repository has its own lockfile and release history.
+implements the host runtime. `lomi-dev/plugin-tools` supplies the CLI;
+`lomi-dev/create-lomi-plugin` owns the generator and templates. Each repository
+has its own lockfile and release history.
 
 The application imports types from `@lomi-dev/plugin-sdk`, pure runtime code from
 `@lomi-dev/plugin-sdk/manifest` and `@lomi-dev/plugin-sdk/shortcuts`. It never
@@ -35,7 +36,9 @@ Set repository variables `LOMI_HOST_REF` and `LOMI_TOOLS_REF` to reviewed full
 40-character commits after migrating those repositories. Subsequent SDK checks
 also test the exact Linux archive against these consumers. The consumer job
 runs the application's type checks, tests, build and Rust contract cases, plus
-all generated projects from plugin-tools. Initial bootstrap checks explicitly
+the CLI regressions against projects created by its pinned npm generator.
+The CLI repository records that generator version and SHA-512 integrity in
+`generator-source.json`; it does not need a generator source checkout. Initial bootstrap checks explicitly
 skip this job until the consumer commits exist. A release requires both refs.
 
 The consumer job rewrites only SDK dependency specifications in disposable CI
