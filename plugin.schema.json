@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "SimpleBench plugin v1",
+  "title": "Lomi plugin v1",
   "type": "object",
   "additionalProperties": false,
   "properties": {

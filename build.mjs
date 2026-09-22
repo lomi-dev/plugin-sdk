@@ -69,7 +69,6 @@ export async function buildPlugin({
         "react-dom/client": ["reactDOMClient", Object.keys(ReactDOMClient)],
         "react/jsx-runtime": ["jsx", Object.keys(JSX)],
         "react/jsx-dev-runtime": ["jsxDev", ["Fragment", "jsxDEV"]],
-        "@simplebench/plugin-sdk": ["sdk", ["HostContext", "useHostContext"]],
         "@lomi-dev/plugin-sdk": ["sdk", ["HostContext", "useHostContext"]],
       };
       await build({
@@ -101,19 +100,19 @@ export async function buildPlugin({
         },
         esbuildPlugins: [
           {
-            name: "simplebench-shared-runtime",
+            name: "lomi-shared-runtime",
             setup(builder) {
               builder.onResolve(
                 {
                   filter:
-                    /^(react(?:-dom)?(?:\/.*)?|@(?:simplebench|lomi-dev)\/plugin-sdk(?:\/.*)?)$/,
+                    /^(react(?:-dom)?(?:\/.*)?|@lomi-dev\/plugin-sdk(?:\/.*)?)$/,
                 },
                 (args) => {
                   if (!modules[args.path])
                     throw new Error(
                       `Unsupported shared entry point: ${args.path}`,
                     );
-                  return { path: args.path, namespace: "simplebench-shared" };
+                  return { path: args.path, namespace: "lomi-shared" };
                 },
               );
               builder.onLoad(
@@ -129,12 +128,12 @@ export async function buildPlugin({
                 },
               );
               builder.onLoad(
-                { filter: /.*/, namespace: "simplebench-shared" },
+                { filter: /.*/, namespace: "lomi-shared" },
                 (args) => {
                   const [name, keys] = modules[args.path];
                   return {
                     loader: "js",
-                    contents: `const shared=globalThis[Symbol.for("simplebench.plugin-api.v1")]; if(!shared) throw new Error("Lomi host is missing"); const module=shared.${name}; export default module; ${keys
+                    contents: `const shared=globalThis[Symbol.for("lomi.plugin-api.v1")]; if(!shared) throw new Error("Lomi host is missing"); const module=shared.${name}; export default module; ${keys
                       .filter(
                         (k) =>
                           k !== "default" && /^[a-zA-Z][a-zA-Z0-9_]*$/.test(k),

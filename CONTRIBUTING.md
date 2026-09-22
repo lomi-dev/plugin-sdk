@@ -3,7 +3,7 @@
 Use Node 22.14+ and pnpm 11.25.0. Install with `pnpm install --frozen-lockfile`.
 Run `pnpm check`, `pnpm test`, `pnpm format:check` and `pnpm test:archive`.
 The archive test installs copied tarballs in fresh temporary directories with
-an isolated dependency store. It exercises both current and legacy imports.
+an isolated dependency store. It exercises the Lomi import and shared runtime identity.
 
 Public exports and contract fixtures are versioned together. The application
 keeps a byte-for-byte copy of the fixtures for Rust-only builds; its SDK check

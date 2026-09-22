@@ -1,20 +1,16 @@
 # Releases
 
-The first standalone version is `@lomi-dev/plugin-sdk@1.1.0-alpha.0`. It preserves
-host API 1 and the existing `simplebench.plugin-api.v1` bridge. The source history
-was extracted from `lomi/packages/plugin-sdk`; new SDK changes belong here.
-
-SDK 1.1.0-alpha.0 is published on npm. The verified npm organization owner is
-`maciejkolerski`, with 2FA enabled. Publication used the original tested GitHub
-prerelease archive from source `77d0c93461a99678b35469291219ab50b0140db8`.
-Registry SHA-512 integrity matches that archive, and the application installs
-the exact registry version. Never reuse or replace a published version's bytes.
-This alpha publication does not establish stable desktop qualification.
+The rebrand candidate is `@lomi-dev/plugin-sdk@1.1.0-alpha.1`. It keeps host
+API 1 and changes the runtime bridge to `lomi.plugin-api.v1`. Rebuild plugins
+for the Lomi host. The candidate has not been published by this rebrand task.
+Publish the tested SDK archive before publishing the compatible CLI and generator.
+The original standalone release was 1.1.0-alpha.0; its published bytes remain
+immutable. Native desktop qualification is separate from archive tests.
 
 ## Prepare a version
 
 1. Update `package.json` and `compatibility.js` together. Keep the runtime symbol
-   and old bundler alias. Review whether a change needs a new host API or a new
+   and the Lomi import. Review whether a change needs a new host API or a new
    minimum host version; do not infer capabilities from an SDK version alone.
 2. Run `pnpm install --frozen-lockfile`, `pnpm check`, `pnpm test`,
    `pnpm format:check`, and `pnpm test:archive`. Review `artifacts/release.json`

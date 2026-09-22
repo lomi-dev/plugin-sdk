@@ -16,11 +16,11 @@ run `tsc --noEmit` before calling the legacy helper directly. Runtime packages d
 not include declaration files or source text. Source maps retain source paths
 without embedded source content. Installation runs no compiler or package scripts.
 
-The standalone package is `@lomi-dev/plugin-sdk@1.1.0-alpha.0`. See the
+The standalone package is `@lomi-dev/plugin-sdk@1.1.0-alpha.1`. See the
 [release procedure](docs/releases.md) for distribution status and prerequisites.
-The bundler supports both the current import and the legacy
-`@simplebench/plugin-sdk` import. Both retain
-`Symbol.for("simplebench.plugin-api.v1")` and the same host React context.
+The bundler bridges `@lomi-dev/plugin-sdk` through
+`Symbol.for("lomi.plugin-api.v1")` and the host React context. Rebuild plugins
+with this SDK for the Lomi host; the previous runtime bridge is not supported.
 
 Pure Node-safe exports:
 
@@ -74,7 +74,7 @@ pnpm pack:release
 ```
 
 In your plugin's own folder, set the SDK dependency to
-`file:/absolute/path/to/plugin-sdk/artifacts/lomi-dev-plugin-sdk-1.1.0-alpha.0.tgz`
+`file:/absolute/path/to/plugin-sdk/artifacts/lomi-dev-plugin-sdk-1.1.0-alpha.1.tgz`
 and declare compatible React, React DOM and TypeScript versions. The archive
 contains its built exports and the build helper declares its own dependencies. Provide
 `plugin.json`, `src/index.tsx` exporting `activate`, and a `tsconfig.json` with
@@ -119,7 +119,7 @@ The loader serves only approved immutable package snapshots through `plugin:`
 per-resource hashes. Importing never grants trust. Trust records the complete
 package content hash; it does not verify the publisher. Disable before replacing
 an installed package, then review and trust the new revision. If code was
-already evaluated, **Restart SimpleBench** uses normal unsaved-work and session
+already evaluated, **Restart Lomi** uses normal unsaved-work and session
 save guards. Modules cannot be unloaded from the JavaScript engine. Cooperative
 deactivation and reactivation of the same revision are supported; old immutable
 revisions are removed on the next process's catalogue read.
@@ -176,7 +176,7 @@ Settings manages packages and validated metadata; browser child views retain
 only their browser reporting privilege. These webview boundaries do not sandbox
 trusted JavaScript within main.
 
-Start `simplebench --safe-mode` to recover from plugin code or CSS that blocks the
+Start `lomi --safe-mode` to recover from plugin code or CSS that blocks the
 interface. Disable the faulty plugin in Settings, then close/reopen normally.
 For corrupt `plugins/installed.json`, close the application, rename that file to
 `installed.backup.json`, restart in safe mode and reimport desired packages.

@@ -30,8 +30,7 @@ snapshot is test data, not a second implementation of the validators.
 GitHub Actions is disabled. Run `pnpm check`, `pnpm test` and `pnpm test:archive`
 manually on Linux, macOS and Windows before releasing. These validate metadata,
 declarations, contract/runtime behavior and installed archives. Archive installation
-uses a fresh store and works with dependency scripts disabled. Both current and
-legacy SDK imports are built and loaded with the same React/context identity.
+uses a fresh store and works with dependency scripts disabled. The Lomi SDK import is built and loaded with the same React/context identity.
 
 Create clean, disposable clones of the application and CLI at reviewed full
 40-character commits. From the SDK checkout that produced the tested archive,
@@ -59,7 +58,7 @@ Before running Playwright, export `LOMI_AUTHOR_PACKAGE` with the absolute
 export LOMI_AUTHOR_PACKAGE="/absolute/path/to/author-projects/autor żółć panel/package"
 cargo test --manifest-path src-tauri/Cargo.toml --locked plugins::tests
 pnpm exec playwright install --with-deps chromium
-pnpm --filter simplebench-plugin-fixture build
+pnpm --filter lomi-plugin-fixture build
 pnpm exec playwright test tests/ui/plugins.spec.ts tests/ui/plugin-authoring.spec.ts
 ```
 

@@ -56,13 +56,8 @@ for (const required of [
 process.env.npm_config_store_dir = join(directory, "store");
 process.env.npm_config_cache = join(directory, "cache");
 const results = [];
-for (const alias of ["@lomi-dev/plugin-sdk", "@simplebench/plugin-sdk"]) {
-  const project = join(
-    directory,
-    alias.includes("simplebench")
-      ? "legacy author żółć"
-      : "current author żółć",
-  );
+for (const alias of ["@lomi-dev/plugin-sdk"]) {
+  const project = join(directory, "independent author żółć");
   await cp(join(root, "tests/fixtures/context-plugin"), project, {
     recursive: true,
     filter: (path) =>
@@ -122,7 +117,7 @@ for (const alias of ["@lomi-dev/plugin-sdk", "@simplebench/plugin-sdk"]) {
     const { manifest } = await validatePackage('package');
     parsePlugin(manifest);
     assert.equal(validShortcut('Ctrl+KeyK'), true);
-    assert.equal(compatibility.runtimeSymbol, 'simplebench.plugin-api.v1');
+    assert.equal(compatibility.runtimeSymbol, 'lomi.plugin-api.v1');
     const sdk = { HostContext: React.createContext(null), useHostContext: () => null };
     globalThis[Symbol.for(compatibility.runtimeSymbol)] = { sdk, react: React, reactDOM: ReactDOM, reactDOMClient: ReactDOMClient, jsx, jsxDev };
     const runtime = await import('${alias}');

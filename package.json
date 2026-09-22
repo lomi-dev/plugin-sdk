@@ -1,6 +1,6 @@
 {
   "name": "@lomi-dev/plugin-sdk",
-  "version": "1.1.0-alpha.0",
+  "version": "1.1.0-alpha.1",
   "type": "module",
   "license": "Apache-2.0",
   "types": "index.d.ts",
